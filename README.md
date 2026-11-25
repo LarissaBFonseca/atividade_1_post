@@ -1,6 +1,9 @@
+Aqui está o `README.md` completo em Markdown puro, documentando as 3 atividades, a estrutura de pastas e todos os endpoints para você colar diretamente no `README.md` da raiz do seu repositório:
+
+```markdown
 # Atividade Prática - Rotas POST com Express e TypeScript
 
-Repositório contendo os projetos desenvolvidos em Node.js com Express e TypeScript para praticar a criação de servidores web, rotas do tipo `POST`, leitura do corpo da requisição (`req.body`), validação de dados, tratamento de erros e retorno de status HTTP adequados.
+Repositório contendo os projetos desenvolvidos em Node.js com Express e TypeScript para praticar a criação de servidores web, rotas do tipo `POST`, leitura do corpo da requisição (`req.body`), leitura de arquivos JSON, validação de dados, tratamento de erros e retorno de status HTTP adequados.
 
 ## 📂 Estrutura do Projeto
 
@@ -8,13 +11,14 @@ Repositório contendo os projetos desenvolvidos em Node.js com Express e TypeScr
 atividade_1_post/
 ├── Atividade 1/
 │   └── src/
-│       └── app.ts      # Servidor da rota POST /mensagem (Porta 8081)
+│       └── app.ts          # Servidor da rota POST /mensagem (Porta 8081)
 ├── Atividade 2/
 │   └── src/
-│       └── app.ts      # Servidor da rota POST /soma (Porta 8082)
+│       └── app.ts          # Servidor da rota POST /soma (Porta 8082)
 ├── Atividade 3/
 │   └── src/
-│       └── app.ts      # Servidor da rota POST /login
+│       ├── app.ts          # Servidor da rota POST /login (Porta 8083)
+│       └── usuarios.json   # Base de credenciais esperadas para o login
 ├── package.json
 ├── tsconfig.json
 └── README.md
@@ -29,20 +33,24 @@ atividade_1_post/
 
 ## ⚙️ Como Instalar e Executar
 
-1. Instale as dependências na raiz do projeto:
+1. Clone o repositório e instale as dependências na raiz do projeto:
    ```bash
    npm install
    ```
 
 2. Execute o servidor da atividade desejada pelo terminal:
 
-   * **Para rodar a Atividade 1:**
+   * **Atividade 1 (Porta 8081):**
      ```bash
      npx tsx "Atividade 1/src/app.ts"
      ```
-   * **Para rodar a Atividade 2:**
+   * **Atividade 2 (Porta 8082):**
      ```bash
      npx tsx "Atividade 2/src/app.ts"
+     ```
+   * **Atividade 3 (Porta 8083):**
+     ```bash
+     npx tsx "Atividade 3/src/app.ts"
      ```
 
 ---
@@ -113,6 +121,48 @@ Recebe três valores (`num1`, `num2` e `num3`), valida se todos foram enviados e
   }
   ```
 
-* **Erro Interno (`500 Internal Server Error`):** Retornado em caso de falha inesperada na execução do servidor.
+---
+
+### 3. Atividade 3 — `POST /login` (`http://localhost:8083/login`)
+
+Recebe `usuario` e `senha` no corpo da requisição, realiza a leitura do arquivo `usuarios.json` e verifica se as credenciais correspondem aos dados esperados.
+
+#### Exemplo de Requisição (Body - JSON)
+```json
+{
+  "usuario": "admin",
+  "senha": "123456"
+}
+```
+
+#### Respostas Possíveis
+
+* **Sucesso (`200 OK`):**
   ```json
-  
+  {
+    "mensagem": "Login realizado com sucesso! Bem-vindo, admin!"
+  }
+  ```
+
+* **Credenciais Inválidas (`401 Unauthorized`):** Retornado quando usuário ou senha são diferentes do esperado.
+  ```json
+  {
+    "erro": "Usuário ou senha incorretos."
+  }
+  ```
+
+* **Erro de Validação (`400 Bad Request`):** Retornado quando usuário ou senha não são enviados na requisição.
+  ```json
+  {
+    "erro": "Dados incompletos. Informe 'usuario' e 'senha'."
+  }
+  ```
+
+* **Erro Interno (`500 Internal Server Error`):** Retornado em caso de falha na leitura do arquivo JSON ou erro inesperado no servidor.
+  ```json
+  {
+    "erro": "Erro interno ao processar o login ou ler o arquivo de usuários."
+  }
+  ```
+
+```
